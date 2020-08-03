@@ -138,45 +138,93 @@
 //     console.log(e)
 //   })
 
-// 车的父类
-class Car {
-  constructor(number, name) {
-    this.number = number
+// // 车的父类
+// class Car {
+//   constructor(number, name) {
+//     this.number = number
+//     this.name = name
+//   }
+// }
+
+// // 快车继承车
+// class KuaiChe extends Car {
+//   constructor(number, name, price = 1) {
+//     super(number, name)
+//     this.price = price
+//   }
+// }
+
+// // 专车继承车
+// class ZhuanChe extends Car {
+//   constructor(number, name, price = 2) {
+//     super(number, name)
+//     this.price = price
+//   }
+// }
+
+// // 行程
+// class Trip {
+//   constructor(car) {
+//     this.car = car
+//   }
+//   start() {
+//     console.log(`行程开始, 名称: ${this.car.name},车牌号: ${this.car.number}`)
+//   }
+//   end(distance = 5) {
+//     console.log(`行程结束, 总共 ${distance} 公里, 价格: ${this.car.price * distance}`)
+//   }
+// }
+
+// // let car = new KuaiChe(100, '桑塔纳')
+// let car = new ZhuanChe(200, '荣威')
+// let trip = new Trip(car)
+// trip.start()
+// trip.end()
+
+/**
+ * TODO: 观察者模式代码演示
+ */
+// 主题、保存状态、状态变化之后触发所有观察者对象
+class Subject {
+  constructor() {
+    this.state = 0
+    this.observers = []
+  }
+  getState() {
+    return this.state
+  }
+  setState(state) {
+    this.state = state
+    this.notifyAllObservers()
+  }
+  notifyAllObservers() {
+    this.observers.forEach(observer => {
+      observer.update()
+    })
+  }
+  attach(observer) {
+    this.observers.push(observer)
+  }
+}
+
+// 观察者
+class Observer {
+  constructor(name, subject) {
     this.name = name
+    this.subject = subject
+    this.subject.attach(this)
+  }
+  update() {
+    console.log(`${this.name} update, state: ${this.subject.getState()}`)
   }
 }
 
-// 快车继承车
-class KuaiChe extends Car {
-  constructor(number, name, price = 1) {
-    super(number, name)
-    this.price = price
-  }
-}
+// 测试
+let s = new Subject()
+let o1 = new Observer('o1', s)
+let o2 = new Observer('o2', s)
+let o3 = new Observer('o3', s)
 
-// 专车继承车
-class ZhuanChe extends Car {
-  constructor(number, name, price = 2) {
-    super(number, name)
-    this.price = price
-  }
-}
-
-// 行程
-class Trip {
-  constructor(car) {
-    this.car = car
-  }
-  start() {
-    console.log(`行程开始, 名称: ${this.car.name},车牌号: ${this.car.number}`)
-  }
-  end(distance = 5) {
-    console.log(`行程结束, 总共 ${distance} 公里, 价格: ${this.car.price * distance}`)
-  }
-}
-
-// let car = new KuaiChe(100, '桑塔纳')
-let car = new ZhuanChe(200, '荣威')
-let trip = new Trip(car)
-trip.start()
-trip.end()
+s.setState(1)
+s.setState(2)
+s.setState(3)
